@@ -1,7 +1,6 @@
 #include "WriteBack.h"
 
 #include <stdlib.h>
-#include <stdint.h>
 
 void write_back(const mem_result_t * const in)
 {

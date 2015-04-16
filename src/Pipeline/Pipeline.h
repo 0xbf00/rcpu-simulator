@@ -15,6 +15,8 @@
 #ifndef _PIPELINE_H
 #define _PIPELINE_H
 
+#include <sys/types.h>
+
 #include "../Instruction/Decode.h"
 #include "../Instruction/Opcodes.h"
 
@@ -29,9 +31,9 @@
 */
 typedef struct memory_image {
     uint32_t * code;
-    uint32_t code_size;
+    size_t     code_size;
     uint32_t * data;
-    uint32_t data_size;
+    size_t     data_size;
 } memory_image_t;
 
 extern memory_image_t memory;

@@ -1,5 +1,4 @@
 #include "Disassemble.h" // Instruction/Disassemble.h
-#include "Decode.h" // Instruction/Decode.h
 #include "Opcodes.h"
 
 #ifdef __linux__

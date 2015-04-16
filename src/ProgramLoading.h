@@ -33,7 +33,7 @@ typedef enum {
     @see load_program_from_file
 */
 int load_program_from_path(const LOAD_OPTION option, const char * input_file,
-                           uint32_t ** code_out, uint32_t * size_out);
+                           uint32_t ** code_out, size_t * size_out);
 
 /*!
     @abstract
@@ -66,6 +66,6 @@ int load_program_from_path(const LOAD_OPTION option, const char * input_file,
         An error code (0 on success)
 */
 int load_program_from_file(const LOAD_OPTION option, FILE * input, 
-                           uint32_t ** code_out, uint32_t * size_out);
+                           uint32_t ** code_out, size_t * size_out);
 
 #endif // _PROGRAM_LOADING_H

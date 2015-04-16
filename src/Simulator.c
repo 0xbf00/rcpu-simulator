@@ -1,18 +1,9 @@
 #include "Pipeline/Pipeline.h"
 
-#include "Instruction/Opcodes.h"
-#include "Instruction/Decode.h"
 #include "Instruction/Disassemble.h"
-#include "Instruction/ALUOps.h"
 #include "ProgramLoading.h"
 
-#include "Misc/LinkedList.h"
-
-#include <stdint.h> // uint32_t, uint8_t
-#include <stdbool.h> // bool
 #include <stdlib.h> // EXIT_SUCCESS
-
-#include <sys/stat.h> // stat
 
 #ifdef __linux__
 #include <malloc.h> // malloc
@@ -20,7 +11,6 @@
 #endif
 
 #include <assert.h> // assert
-#include <stdio.h> // printf
 #include <strings.h> // bzero
 
 /*
@@ -42,7 +32,7 @@ void print_usage(const char *program)
 int main(int argc, char *argv[])
 {
     bool programKindSet = false;
-    LOAD_OPTION programKind;
+    LOAD_OPTION programKind = OPT_BINARY;
     bool singleStepping = false;
     char *programString = NULL;
 
@@ -58,6 +48,9 @@ int main(int argc, char *argv[])
                 } else if (strcmp("textual", argv[i+1]) == 0) {
                     programKindSet = true;
                     programKind = OPT_TEXTUAL;
+                } else {
+                    print_usage(argv[0]);
+                    return EXIT_FAILURE;
                 }
             }
         }

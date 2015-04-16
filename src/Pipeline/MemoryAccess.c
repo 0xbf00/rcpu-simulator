@@ -1,5 +1,4 @@
 #include "MemoryAccess.h"
-#include "../Instruction/Decode.h"
 #include "../Misc/LinkedList.h"
 
 #include <assert.h>

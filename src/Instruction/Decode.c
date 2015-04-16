@@ -69,7 +69,7 @@ instruction_type_t instruction_decode_type(const instruction_t inst)
     are guaranteed to be 0 iff the instruction is valid.
 */
 uint8_t instruction_decode_opcode(const instruction_t inst) {
-    return inst & 0x0000003f;
+    return (uint8_t) (inst & 0x0000003f);
 }
 
 /*!

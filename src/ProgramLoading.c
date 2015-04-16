@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include <stdio.h>
+#include <assert.h>
 
 #ifdef __linux
 #include <malloc.h>
@@ -14,11 +14,12 @@
     Returns the filesize of the file fp,
     or -1 if an error occurred.
 */
-static int file_getsize(FILE *fp) {
+static size_t file_getsize(FILE *fp) {
     struct stat s;
     int ret = fstat(fileno(fp), &s);
 
-    return (ret == -1) ? -1 : s.st_size;
+    assert((ret != -1) && s.st_size >= 0);
+    return (size_t) s.st_size;
 }
 
 static int isbinary(int c)
@@ -36,10 +37,14 @@ static uint32_t read_instruction_from_file(FILE * input)
     uint32_t result = 0;
 
     // Skip the first number
-    while (isdigit(currentChar = fgetc(input)));
-    
+    while (isdigit(currentChar = fgetc(input)))
+        ;
+    ungetc(currentChar, stdin);
+
     // Skip whitespace between number and bit vector
-    while (isspace(currentChar = fgetc(input)));
+    while (isspace(currentChar = fgetc(input)))
+        ;
+    ungetc(currentChar, stdin);
 
     while (isbinary(currentChar = fgetc(input))) {
         result = (result << 1) + (currentChar - '0');
@@ -52,7 +57,7 @@ static uint32_t read_instruction_from_file(FILE * input)
 }
 
 int load_program_from_path(const LOAD_OPTION option, const char * input_file,
-                           uint32_t ** code_out, uint32_t * size_out)
+                           uint32_t ** code_out, size_t * size_out)
 {
     FILE *fp = fopen(input_file, "rb");
     if (fp == NULL)
@@ -65,10 +70,10 @@ int load_program_from_path(const LOAD_OPTION option, const char * input_file,
 }
 
 int load_program_from_file(const LOAD_OPTION option, FILE * input, 
-                           uint32_t ** code_out, uint32_t * size_out)
+                           uint32_t ** code_out, size_t * size_out)
 {
     if (option == OPT_BINARY) {
-        const int filesize = file_getsize(input);
+        const size_t filesize = file_getsize(input);
 
         // Our program needs to be aligned to a 4 byte boundary
         if (filesize % sizeof(uint32_t) != 0)
@@ -78,7 +83,7 @@ int load_program_from_file(const LOAD_OPTION option, FILE * input,
         if (code == NULL)
             return 1;
 
-        const uint32_t readCount = fread(code, 1, filesize, input);
+        const size_t readCount = fread(code, 1, filesize, input);
         if (readCount != filesize)
             return 1;
 
